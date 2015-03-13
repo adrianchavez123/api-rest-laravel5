@@ -12,9 +12,13 @@ class UserAddressController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($user_id)
 	{
-		//
+		$addresses =  \App\Models\Address::get();
+		return response()->json([
+			'msg'			=>		'success',
+			'addresses'		=> 		$addresses->toArray()
+			],200);
 	}
 
 	/**
