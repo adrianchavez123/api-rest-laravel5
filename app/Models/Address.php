@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model  {
 
-	protected $table = 'address';
+	protected $table = 'addresses';
 	public $timestamps = true;
 
 	protected $fillable = ['street', 'number', 'colony','zip','city','state','user_id'];
@@ -12,6 +12,6 @@ class Address extends Model  {
 
 	public function user()
 	{
-	return $this->belongsTo('App\User');
+		return $this->belongsTo('App\User');
 	}
 }

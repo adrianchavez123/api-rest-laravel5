@@ -4,7 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-
+use App\Http\Requests\CategoryProductRequest;
 class CategoryProductController extends Controller {
 
 	/**
@@ -12,73 +12,90 @@ class CategoryProductController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($category_id)
 	{
-		//
+		$products =  \App\Models\Product::whereCategoryId($category_id)->get();
+		
+		return response()->json([
+			'msg'			=>		'success',
+			'products'			=> 		$products->toArray()
+			],200);
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+	public function store(CategoryProductRequest $request,$category_id)
 	{
-		//
+		$product = new \App\Models\Product();
+		$product->code 			= $request->code;
+		$product->amount 		= $request->amount;
+		$product->description 	= $request->description;
+		$product->name 			= $request->name;
+		$product->category_id 	= $category_id;
+		
+		if($product->save())
+		{
+			return response()->json([
+			'msg'		=>		'success'
+			],201);
+		}
+		else
+		{
+			return response()->json([
+			'msg'		=>		'error',
+			'error'		=>		'cannot create record'
+			],400);
+		}
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+	public function show($category_id,$id)
 	{
-		//
+		$product = \App\Models\Product::find($id)->whereCategoryId($category_id)->first();
+		return response()->json([
+			'msg'			=>		'success',
+			'sale'		=> 		$product->toArray()
+			],200);
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
+	public function update(Request $request,$category_id,$id)
 	{
-		//
+		$product = \App\Models\Product::find($id)->whereCategoryId($category_id)->first();
+		$product->code 			= $request->code;
+		$product->amount 		= $request->amount;
+		$product->description 	= $request->description;
+		$product->name 			= $request->name;
+		
+		if($product->save())
+		{
+			return response()->json([
+			'msg'		=>		'success'
+			],204);
+		}
+		else
+		{
+			return response()->json([
+			'msg'		=>		'error',
+			'error'		=>		'cannot create record'
+			],400);
+		}
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
+	
+	public function destroy($category_id,$id)
 	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
+		$product = \App\Models\Product::find($id)->whereCategoryId($category_id)->first();
+		
+		if($product->delete())
+		{
+			return response()->json([
+			'msg'		=>		'success'
+			],204);
+		}
+		else
+		{
+			return response()->json([
+			'msg'		=>		'error',
+			'error'		=>		'cannot create record'
+			],400);
+		}
 	}
 
 }

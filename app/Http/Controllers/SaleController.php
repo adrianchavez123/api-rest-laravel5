@@ -7,78 +7,63 @@ use Illuminate\Http\Request;
 
 class SaleController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
-		//
+		$sales = \App\Models\Sale::get();
+		return response()->json([
+			'msg'		=>		'success',
+			'sales'		=> 		$sales->toArray()
+			],200);	
 	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+	
 	public function show($id)
 	{
-		//
+		//edit to show user
+		$sale = \App\Models\Sale::findOrFail($id);
+		return response()->json([
+			'msg'		=>		'success',
+			'sale'		=> 		$sale->toArray()
+			],200);	
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
+	public function update(Request $request,$id)
 	{
-		//
+		$sale = \App\Models\Sale::findOrFail($id);
+		$sale->sale_number 	= $request->sale_number;
+		$sale->total 		= $request->total;
+		
+		
+		if($sale->save())
+		{
+			return response()->json([
+			'msg'		=>		'success'
+			],204);
+		}
+		else
+		{
+			return response()->json([
+			'msg'		=>		'error',
+			'error'		=>		'cannot create record'
+			],400);
+		}
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
 	public function destroy($id)
 	{
-		//
+		$sale = \App\Models\Sale::findOrFail($id);
+		if($sale->delete())
+		{
+			return response()->json([
+			'msg'		=>		'success'
+			],204);
+		}
+		else
+		{
+			return response()->json([
+			'msg'		=>		'error',
+			'error'		=>		'cannot create record'
+			],400);
+		}
 	}
 
 }

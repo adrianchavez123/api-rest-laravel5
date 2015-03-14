@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
-	protected $table= 'product';
+	protected $table= 'products';
 	public $timestamps = true;
 
 	protected $fillable = ['code','price','amount','description','name','category_id'];

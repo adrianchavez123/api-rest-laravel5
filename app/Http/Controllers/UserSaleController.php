@@ -4,81 +4,97 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\UserSaleRequest;
 
 class UserSaleController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
+	public function index($user_id)
 	{
-		//
+		$sales =  \App\Models\Sale::whereUserId($user_id)->get();
+		
+		return response()->json([
+			'msg'			=>		'success',
+			'sales'			=> 		$sales->toArray()
+			],200);
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+	
+	public function store(UserSaleRequest $request,$user_id)
 	{
-		//
+		$sale = new \App\Models\Sale();
+		//sale number then will be generate automatically just for now is send by the client
+		$sale->sale_number 	= $request->sale_number;
+		$sale->total 		= $request->total;
+		$sale->user_id 		= $user_id;
+		
+		
+		if($sale->save())
+		{
+			return response()->json([
+			'msg'		=>		'success'
+			],201);
+		}
+		else
+		{
+			return response()->json([
+			'msg'		=>		'error',
+			'error'		=>		'cannot create record'
+			],400);
+		}
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+	
+	public function show($user_id,$id)
 	{
-		//
+		$sale = \App\Models\Sale::find($id)->whereUserId($user_id)->first();
+		return response()->json([
+			'msg'			=>		'success',
+			'sale'		=> 		$sale->toArray()
+			],200);
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
+	//public function update(UserSaleRequest $request,$user_id,$id)
+	public function update(Request $request,$user_id,$id)
 	{
-		//
+		$sale = \App\Models\Sale::find($id)->whereUserId($user_id)->first();
+		$sale->sale_number 	= $request->sale_number;
+		$sale->total 		= $request->total;
+		$sale->user_id 		= $user_id;
+		
+		
+		if($sale->save())
+		{
+			return response()->json([
+			'msg'		=>		'success'
+			],204);
+		}
+		else
+		{
+			return response()->json([
+			'msg'		=>		'error',
+			'error'		=>		'cannot create record'
+			],400);
+		}
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
+	
+	public function destroy($user_id,$id)
 	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
+		$sale = \App\Models\Sale::find($id)->whereUserId($user_id)->first();
+		
+		if($sale->delete())
+		{
+			return response()->json([
+			'msg'		=>		'success'
+			],204);
+		}
+		else
+		{
+			return response()->json([
+			'msg'		=>		'error',
+			'error'		=>		'cannot create record'
+			],400);
+		}
 	}
 
 }
