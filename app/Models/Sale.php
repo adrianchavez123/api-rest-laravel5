@@ -7,7 +7,7 @@ class Sale extends Model
 	protected $table = 'sales';
 	public $timestamps = true;
 
-	protected $fillable = ['sale_number','total','user_id'];
+	protected $fillable = ['total','user_id'];
 	protected $hidden = [];
 
 	public function user()

@@ -16,7 +16,6 @@ class CreateSalesTable extends Migration {
 		Schema::create('sales',function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('sale_number',50)->unique();
 			$table->double('total');
 			$table->integer('user_id')->unsigned()->references('id')->on('users');
 			$table->timestamps();

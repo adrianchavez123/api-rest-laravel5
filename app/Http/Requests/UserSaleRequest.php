@@ -22,8 +22,9 @@ class UserSaleRequest extends Request {
 	public function rules()
 	{
 		return [
-			'sale_number'		=>		'required|integer',
-			'total'				=>		'required|numeric'
+			'total'				=>		'required|numeric',
+			'products'			=>		'required',
+			'amounts'			=>		'required'
 		];
 	}
 

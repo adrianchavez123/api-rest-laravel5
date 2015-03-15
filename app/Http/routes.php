@@ -32,9 +32,9 @@ Route::controllers([
 
 Route::resource('users','UserController',['except' => ['create', 'edit']]);
 Route::resource('users.addresses','UserAddressController',['except' => ['create', 'edit']]);
-Route::resource('users.sales','UserSaleController',['except' => ['create', 'edit']]);
+Route::resource('users.sales','UserSaleController',['except' => ['create', 'edit','update','delete']]);
 Route::resource('categories','CategoryController',['except' => ['create', 'edit']]);
 Route::resource('categories.products','CategoryProductController',['except' => ['create', 'edit']]);
-Route::resource('sales','SaleController',['except' => ['create', 'edit','store']]);
+Route::resource('sales','SaleController',['except' => ['create', 'edit','store','update','delete']]);
 
 

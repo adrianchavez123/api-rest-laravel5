@@ -38,8 +38,14 @@ class CategoryController extends Controller {
 
 	public function show($id)
 	{
-		$category = \App\Models\Category::findOrFail($id);
-
+		$category = \App\Models\Category::find($id);
+		if(is_null($category))
+		{
+			return response()->json([
+			'msg'		=>		'success',
+			'category'		=> 		'category not found'
+			],404);
+		}
 		return response()->json([
 				'msg'		=>		'success',
 				'category'	=>		$category->toArray()
@@ -48,7 +54,16 @@ class CategoryController extends Controller {
 	//public function update(CategoryRequest $request,$id)
 	public function update(Request $request,$id)
 	{
-		$category = \App\Models\Category::findOrFail($id);
+		$category = \App\Models\Category::find($id);
+		
+		if(is_null($category))
+		{
+			return response()->json([
+			'msg'		=>		'success',
+			'category'		=> 		'category not found'
+			],404);
+		}
+
 		$category->name = $request->name;
 		if($category->save())
 		{
@@ -68,6 +83,13 @@ class CategoryController extends Controller {
 	public function destroy($id)
 	{
 		$category = \App\Models\Category::findOrFail($id);
+		if(is_null($category))
+		{
+			return response()->json([
+			'msg'		=>		'success',
+			'category'		=> 		'category not found'
+			],404);
+		}
 		if($category->delete())
 		{
 			return response()->json([

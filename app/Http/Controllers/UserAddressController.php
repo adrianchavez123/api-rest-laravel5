@@ -52,6 +52,16 @@ class UserAddressController extends Controller {
 	public function show($user_id,$id)
 	{
 		$address = \App\Models\Address::find($id)->whereUserId($user_id)->first();
+		
+		if(is_null($address))
+		{
+			return response()->json([
+			'msg'			=>		'success',
+			'address'		=> 		'address not found'
+			],404);
+		}
+
+
 		return response()->json([
 			'msg'			=>		'success',
 			'address'		=> 		$address->toArray()
@@ -64,6 +74,13 @@ class UserAddressController extends Controller {
 	{
 		$address = \App\Models\Address::find($id)->whereUserId($user_id)->first();
 		
+		if(is_null($address))
+		{
+			return response()->json([
+			'msg'			=>		'success',
+			'address'		=> 		'address not found'
+			],404);
+		}
 		$address->street = $request->street;
 		$address->number = $request->number;
 		$address->colony = $request->colony;
@@ -89,6 +106,15 @@ class UserAddressController extends Controller {
 	public function destroy($user_id,$id)
 	{
 		$address = \App\Models\Address::find($id)->whereUserId($user_id)->first();
+		
+		if(is_null($address))
+		{
+			return response()->json([
+			'msg'			=>		'success',
+			'address'		=> 		'address not found'
+			],404);
+		}
+
 		if($address->delete())
 		{
 			return response()->json([

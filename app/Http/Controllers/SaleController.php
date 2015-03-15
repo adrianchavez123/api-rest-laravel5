@@ -9,61 +9,32 @@ class SaleController extends Controller {
 
 	public function index()
 	{
-		$sales = \App\Models\Sale::get();
+		$sales = \DB::table('sales')
+			->select('sales.id','users.name','email','total','sales.created_at','sales.updated_at')
+			->join('users','sales.user_id','=','users.id')
+			->get();
+
 		return response()->json([
 			'msg'		=>		'success',
-			'sales'		=> 		$sales->toArray()
+			'sales'		=> 		$sales
 			],200);	
 	}
 	
 	public function show($id)
 	{
-		//edit to show user
-		$sale = \App\Models\Sale::findOrFail($id);
+		$sale = \DB::table('sales')
+			->select('users.name','email','code','price','products.name','description','sales_info.amount','total')
+			->join('sales_info','sales_info.sale_id','=','sales.id')
+			->join('products','sales_info.product_id','=','products.id')
+			->join('users','sales.user_id','=','users.id')
+			->where('sales.id','=',$id)
+			->get();
 		return response()->json([
 			'msg'		=>		'success',
-			'sale'		=> 		$sale->toArray()
+			'sale'		=> 		$sale
 			],200);	
 	}
 
-	public function update(Request $request,$id)
-	{
-		$sale = \App\Models\Sale::findOrFail($id);
-		$sale->sale_number 	= $request->sale_number;
-		$sale->total 		= $request->total;
-		
-		
-		if($sale->save())
-		{
-			return response()->json([
-			'msg'		=>		'success'
-			],204);
-		}
-		else
-		{
-			return response()->json([
-			'msg'		=>		'error',
-			'error'		=>		'cannot create record'
-			],400);
-		}
-	}
-
-	public function destroy($id)
-	{
-		$sale = \App\Models\Sale::findOrFail($id);
-		if($sale->delete())
-		{
-			return response()->json([
-			'msg'		=>		'success'
-			],204);
-		}
-		else
-		{
-			return response()->json([
-			'msg'		=>		'error',
-			'error'		=>		'cannot create record'
-			],400);
-		}
-	}
+	
 
 }

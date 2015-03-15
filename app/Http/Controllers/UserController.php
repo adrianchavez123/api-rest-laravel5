@@ -9,7 +9,9 @@ class UserController extends Controller {
 
 	public function index()
 	{
+
 		$users = \App\User::get();
+
 		return response()->json([
 			'msg'		=>		'success',
 			'users'		=> 		$users->toArray()
@@ -22,6 +24,7 @@ class UserController extends Controller {
 		$user = new \App\User();
 		$user->name = $request->name;
 		$user->email = $request->email;
+		$user->user_type = $request->user_type;
 		$user->password = \Hash::make($request->password);
 
 		if($user->save())
@@ -41,7 +44,15 @@ class UserController extends Controller {
 
 	public function show($id)
 	{
-		$user = \App\User::findOrFail($id);
+		$user = \App\User::find($id);
+		
+		if(is_null($user))
+		{
+			return response()->json([
+			'msg'		=>		'success',
+			'user'		=> 		'user not found'
+			],404);
+		}
 		return response()->json([
 			'msg'		=>		'success',
 			'user'		=> 		$user->toArray()
@@ -60,6 +71,13 @@ class UserController extends Controller {
     	]);*/
 		
 		$user = \App\User::find($id);
+		if(is_null($user))
+		{
+			return response()->json([
+			'msg'		=>		'success',
+			'user'		=> 		'user not found'
+			],404);
+		}
 		$user->name= $request->name;
 		$user->email = $request->email;
 		$user->password = \Hash::make($request->password);
@@ -81,7 +99,16 @@ class UserController extends Controller {
 
 	public function destroy($id)
 	{
-		$user = \App\User::findOrFail($id);
+		$user = \App\User::find($id);
+		
+		if(is_null($user))
+		{
+			return response()->json([
+			'msg'		=>		'success',
+			'user'		=> 		'user not found'
+			],404);
+		}
+
 		if($user->delete())
 		{
 			return response()->json([

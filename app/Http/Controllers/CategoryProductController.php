@@ -49,6 +49,15 @@ class CategoryProductController extends Controller {
 	public function show($category_id,$id)
 	{
 		$product = \App\Models\Product::find($id)->whereCategoryId($category_id)->first();
+		
+		if(is_null($product))
+		{
+			return response()->json([
+			'msg'		=>		'success',
+			'product'		=> 		'product not found'
+			],404);
+		}
+
 		return response()->json([
 			'msg'			=>		'success',
 			'sale'		=> 		$product->toArray()
@@ -58,6 +67,14 @@ class CategoryProductController extends Controller {
 	public function update(Request $request,$category_id,$id)
 	{
 		$product = \App\Models\Product::find($id)->whereCategoryId($category_id)->first();
+		if(is_null($product))
+		{
+			return response()->json([
+			'msg'		=>		'success',
+			'product'		=> 		'product not found'
+			],404);
+		}
+
 		$product->code 			= $request->code;
 		$product->amount 		= $request->amount;
 		$product->description 	= $request->description;
@@ -82,6 +99,13 @@ class CategoryProductController extends Controller {
 	public function destroy($category_id,$id)
 	{
 		$product = \App\Models\Product::find($id)->whereCategoryId($category_id)->first();
+		if(is_null($product))
+		{
+			return response()->json([
+			'msg'		=>		'success',
+			'product'		=> 		'product not found'
+			],404);
+		}
 		
 		if($product->delete())
 		{
